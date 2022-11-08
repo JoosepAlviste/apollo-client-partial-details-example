@@ -1,9 +1,12 @@
 <template>
   <h1>List view</h1>
   <div>
-    <ul>
+    <ul class="list">
       <li v-for="character in characters">
-        <router-link :to="`/${character.id}`">{{ character.name }}</router-link>
+        <router-link :to="`/${character.id}`" class="list-item">
+          <img class="image" :src="character.image" />
+          {{ character.name }}
+        </router-link>
       </li>
     </ul>
   </div>
@@ -28,5 +31,27 @@ const { result } = useQuery(
   `)
 );
 
-const characters = computed(() => result.value.characters.results);
+const characters = computed(() => result.value?.characters?.results);
 </script>
+
+<style scoped>
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.image {
+  width: 3rem;
+  height: 3rem;
+}
+</style>
