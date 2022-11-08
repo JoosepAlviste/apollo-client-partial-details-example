@@ -1,13 +1,13 @@
 <template>
-  <h1>List view</h1>
+  <h2>Characters</h2>
 
   <div v-if="loading">Loading...</div>
 
   <div v-else-if="characters">
     <ul class="list">
       <li v-for="character in characters">
-        <router-link :to="`/${character.id}`" class="list-item">
-          <img class="image" :src="character.image" />
+        <router-link v-if="character" :to="`/${character.id}`" class="list-item">
+          <img v-if="character.image" class="image" :src="character.image" />
           {{ character.name }}
         </router-link>
       </li>
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
 import { graphql } from '../gql';
 
