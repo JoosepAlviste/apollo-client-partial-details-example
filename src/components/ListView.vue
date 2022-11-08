@@ -1,6 +1,9 @@
 <template>
   <h1>List view</h1>
-  <div>
+
+  <div v-if="loading">Loading...</div>
+
+  <div v-else-if="characters">
     <ul class="list">
       <li v-for="character in characters">
         <router-link :to="`/${character.id}`" class="list-item">
@@ -17,7 +20,7 @@ import { ref, computed } from 'vue';
 import { useQuery } from '@vue/apollo-composable';
 import { graphql } from '../gql';
 
-const { result } = useQuery(
+const { result, loading } = useQuery(
   graphql(`
     query characters {
       characters {
