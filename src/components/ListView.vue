@@ -6,7 +6,11 @@
   <div v-else-if="characters">
     <ul class="list">
       <li v-for="character in characters">
-        <router-link v-if="character" :to="`/${character.id}`" class="list-item">
+        <router-link
+          v-if="character"
+          :to="`/${character.id}`"
+          class="list-item"
+        >
           <img v-if="character.image" class="image" :src="character.image" />
           {{ character.name }}
         </router-link>

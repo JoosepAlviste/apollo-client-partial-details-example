@@ -2,7 +2,9 @@
   <div v-if="loading">Loading...</div>
 
   <div v-else-if="character" class="details">
-    <h2>{{ character.name }} (<router-link to="/">Back to list</router-link>)</h2>
+    <h2>
+      {{ character.name }} (<router-link to="/">Back to list</router-link>)
+    </h2>
     <img v-if="character.image" :src="character.image" class="image" />
     <div>Gender: {{ character.gender }}</div>
     <div>Status: {{ character.status }}</div>
@@ -18,7 +20,8 @@
   </div>
 </template>
 
-<script setup lang="ts">import { useQuery } from '@vue/apollo-composable';
+<script setup lang="ts">
+import { useQuery } from '@vue/apollo-composable';
 import { computed } from 'vue';
 import { graphql } from '../gql';
 
