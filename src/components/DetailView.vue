@@ -1,22 +1,25 @@
 <template>
-  <div v-if="loading">Loading...</div>
+  <div v-if="!character && loading">Loading...</div>
 
   <div v-else-if="character" class="details">
     <h2>
       {{ character.name }} (<router-link to="/">Back to list</router-link>)
     </h2>
     <img v-if="character.image" :src="character.image" class="image" />
-    <div>Gender: {{ character.gender }}</div>
-    <div>Status: {{ character.status }}</div>
-    <div>Species: {{ character.species }}</div>
-    <div>
-      <div>Episodes:</div>
-      <ul class="episodes-list">
-        <li v-for="episode in character.episode">
-          {{ episode?.name }}
-        </li>
-      </ul>
-    </div>
+    <template v-if="character.episode">
+      <div>Gender: {{ character.gender }}</div>
+      <div>Status: {{ character.status }}</div>
+      <div>Species: {{ character.species }}</div>
+      <div>
+        <div>Episodes:</div>
+        <ul class="episodes-list">
+          <li v-for="episode in character.episode">
+            {{ episode?.name }}
+          </li>
+        </ul>
+      </div>
+    </template>
+    <div v-else-if="loading">Loading...</div>
   </div>
 </template>
 
@@ -46,7 +49,15 @@ const { result, loading } = useQuery(
       }
     }
   `),
-  { characterId: props.id }
+  { characterId: props.id },
+  {
+    // This allows Apollo Client to return us data in `result` even if not all
+    // the required fields exist.
+    //
+    // Read more about this option in the Apollo Client docs:
+    // https://www.apollographql.com/docs/react/data/queries/#returnpartialdata
+    returnPartialData: true,
+  }
 );
 
 const character = computed(() => result.value?.character);

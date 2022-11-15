@@ -1,7 +1,7 @@
 import { createApp, provide, h } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { DefaultApolloClient } from '@vue/apollo-composable';
-import { ApolloClient } from '@apollo/client/core';
+import { ApolloClient, gql } from '@apollo/client/core';
 import { InMemoryCache } from '@apollo/client/cache';
 
 import App from './App.vue';
@@ -20,7 +20,39 @@ const router = createRouter({
 
 const apolloClient = new ApolloClient({
   uri: 'https://rickandmortyapi.com/graphql',
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          character: {
+            read(existing, { args, toReference, cache }) {
+              if (!args || existing) {
+                return existing;
+              }
+
+              const ref = toReference({
+                __typename: 'Character',
+                id: args.id,
+              });
+
+              // Check if we have an existing quote already saved into Apollo
+              // Cache.
+              const existingCharacter = cache.readFragment({
+                id: ref?.__ref,
+                fragment: gql`
+                  fragment MyCharacter on Character {
+                    id
+                  }
+                `,
+              });
+
+              return existingCharacter ? ref : undefined;
+            },
+          },
+        },
+      },
+    },
+  }),
 });
 
 const app = createApp({
