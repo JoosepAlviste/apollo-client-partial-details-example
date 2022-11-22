@@ -20,6 +20,7 @@ const router = createRouter({
 
 const apolloClient = new ApolloClient({
   uri: 'https://rickandmortyapi.com/graphql',
+  connectToDevTools: true,
   cache: new InMemoryCache({
     typePolicies: {
       Query: {
